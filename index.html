@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LAPORAN CV ONE PONSEL GRUP</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2e7d32">
+</head>
+
+<body class="bg-gradient-to-b from-green-700 to-green-300 min-h-screen">
+
+<!-- LOGIN -->
+<div id="loginPage" class="max-w-sm mx-auto mt-24 bg-white p-6 rounded-2xl shadow">
+  <h2 class="text-xl font-bold mb-4 text-center">Login Aplikasi</h2>
+
+  <input id="username" type="text" placeholder="Username" class="w-full mb-3 p-2 border rounded">
+  <input id="password" type="password" placeholder="Password" class="w-full mb-4 p-2 border rounded">
+
+  <button onclick="login()" class="w-full bg-blue-500 text-white p-2 rounded">
+    Masuk
+  </button>
+
+  <p id="error" class="text-red-500 text-sm mt-2 text-center hidden">
+    Username atau password salah
+  </p>
+</div>
+
+<!-- DASHBOARD -->
+<div id="appPage" class="hidden p-4 max-w-5xl mx-auto">
+
+  <h1 class="text-white text-2xl font-bold text-center mb-6">
+    LAPORAN CV ONE PONSEL GRUP
+  </h1>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+    <!-- ADMIN ONLY -->
+    <div id="btnInput" onclick="go('https://forms.gle/A2Kjs2g3MkvyMVdW6')" class="hidden card">📝<p>Input</p></div>
+
+    <div onclick="go('https://docs.google.com/spreadsheets/d/1BocGALqcoV5sqK4ohJvkNqcCzsdFnNlowkoB_uL6uCw/edit')" class="card">📊<p>Lihat</p></div>
+
+    <div onclick="openDownload()" class="card">⬇️<p>Download</p></div>
+
+  </div>
+
+  <button onclick="logout()" class="mt-6 w-full bg-red-500 text-white p-3 rounded-xl">
+    Logout
+  </button>
+
+</div>
+
+<!-- MENU DOWNLOAD -->
+<div id="downloadPage" class="hidden p-4 max-w-5xl mx-auto">
+
+  <h2 class="text-white text-xl font-bold text-center mb-4">
+    Menu Download
+  </h2>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+    <div onclick="go('https://docs.google.com/spreadsheets/d/1BocGALqcoV5sqK4ohJvkNqcCzsdFnNlowkoB_uL6uCw/export?format=pdf&gid=1551481225&size=A4&portrait=true&fitw=true')" class="card">📄<p>Laporan</p></div>
+
+    <div onclick="go('https://docs.google.com/spreadsheets/d/1BocGALqcoV5sqK4ohJvkNqcCzsdFnNlowkoB_uL6uCw/export?format=pdf&gid=1276514744&range=A4:P18')" class="card">💰<p>Gadai</p></div>
+
+    <div onclick="go('https://docs.google.com/spreadsheets/d/1BocGALqcoV5sqK4ohJvkNqcCzsdFnNlowkoB_uL6uCw/export?format=pdf&gid=1276514744&range=A20:Q33')" class="card">🛒<p>Penjualan</p></div>
+
+    <div onclick="go('https://docs.google.com/spreadsheets/d/1BocGALqcoV5sqK4ohJvkNqcCzsdFnNlowkoB_uL6uCw/export?format=pdf&gid=1276514744&range=A35:O48')" class="card">🏦<p>Kas Laci</p></div>
+
+    <div onclick="go('https://docs.google.com/spreadsheets/d/1BocGALqcoV5sqK4ohJvkNqcCzsdFnNlowkoB_uL6uCw/export?format=pdf&gid=1276514744&range=A50:O63')" class="card">🏧<p>Kas Bank</p></div>
+
+    <div onclick="go('https://docs.google.com/spreadsheets/d/1BocGALqcoV5sqK4ohJvkNqcCzsdFnNlowkoB_uL6uCw/export?format=pdf&gid=1276514744&range=A65:J78')" class="card">📈<p>Pendapatan</p></div>
+
+    <div onclick="go('https://docs.google.com/spreadsheets/d/1BocGALqcoV5sqK4ohJvkNqcCzsdFnNlowkoB_uL6uCw/export?format=pdf&gid=1276514744&range=A80:N93')" class="card">📋<p>Kontrol</p></div>
+
+    <div onclick="go('https://docs.google.com/spreadsheets/d/1BocGALqcoV5sqK4ohJvkNqcCzsdFnNlowkoB_uL6uCw/export?format=pdf&gid=1276514744&range=A95:N107')" class="card">💳<p>Brilink</p></div>
+
+  </div>
+
+  <button onclick="backHome()" class="mt-6 w-full bg-gray-800 text-white p-3 rounded-xl">
+    ⬅️ Kembali
+  </button>
+
+</div>
+
+<!-- STYLE -->
+<style>
+.card {
+  background: #eee;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  font-weight: bold;
+  color: #2e7d32;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: 0.2s;
+}
+.card:hover {
+  background: white;
+  transform: scale(1.05);
+}
+.card p {
+  margin-top: 8px;
+}
+</style>
+
+<!-- SCRIPT -->
+<script>
+const USERS = {
+  "admin": { password: "12345", role: "admin" },
+  "user": { password: "12345", role: "viewer" }
+};
+
+function login() {
+  const u = username.value;
+  const p = password.value;
+
+  if (USERS[u] && USERS[u].password === p) {
+    localStorage.setItem('login', 'true');
+    localStorage.setItem('role', USERS[u].role);
+
+    loginPage.classList.add('hidden');
+    appPage.classList.remove('hidden');
+
+    applyRole();
+  } else {
+    error.classList.remove('hidden');
+  }
+}
+
+function applyRole() {
+  if (localStorage.getItem('role') === 'admin') {
+    btnInput.classList.remove('hidden');
+  }
+}
+
+function logout() {
+  localStorage.clear();
+  location.reload();
+}
+
+function go(link) {
+  window.open(link, '_blank');
+}
+
+function openDownload() {
+  appPage.classList.add('hidden');
+  downloadPage.classList.remove('hidden');
+}
+
+function backHome() {
+  downloadPage.classList.add('hidden');
+  appPage.classList.remove('hidden');
+}
+
+/* PWA */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+
+/* AUTO LOGIN */
+if (localStorage.getItem('login') === 'true') {
+  loginPage.classList.add('hidden');
+  appPage.classList.remove('hidden');
+  applyRole();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "CV ONE PONSEL",
+  "short_name": "PONSEL",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#2e7d32",
+  "theme_color": "#2e7d32",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
